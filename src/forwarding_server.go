@@ -17,15 +17,15 @@ var (
 )
 
 type ConnInfo struct {
-	conn    net.Conn
-	chid    string
-	timeout uint32
+	conn    net.Conn // 客户端tcp连接
+	chid    string   // 客户端的 channel id
+	timeout uint32   // 客户端连接的心跳超时
 	recvers []string // 接收者的chids
 }
 
 type SendQEle struct {
-	chid string
-	data *bytes.Buffer
+	chid string        // 发送者的 channel id
+	data *bytes.Buffer // 发送的数据
 }
 
 var cmdQ = make(chan string)           // gorouting 控制命令
@@ -41,7 +41,7 @@ func main() {
 	go Accepter(*listenAddr, *handshakePassword)
 
 	select {
-	case cmd := <-cmdQ:
+	case cmd := <-cmdQ: // 收到控制指令
 		if strings.EqualFold(cmd, "quit") {
 			log.Println("quit")
 			break
@@ -116,35 +116,39 @@ func HandShake(conn net.Conn, hsPwd string) (chid string, recvers []string, err 
 
 		var hsMap map[string]interface{}
 		err = json.Unmarshal([]byte(scanner.Text()), &hsMap)
-		if err == nil {
-
-			if hsMap["req"] == "hs1" {
-				if hsMap["chid"] != nil {
-					if len(hsMap["chid"].(string)) > 0 {
-						chid = hsMap["chid"].(string)
-					} else {
-						// chid =uuid // TODO
-					}
-
-					hs2 := map[string]string{"rsp": "hs2", "chid": chid}
-					enc := json.NewEncoder(conn)
-					enc.Encode(hs2)
-				}
-			} else if hsMap["req"] == "hs3" {
-				if hsMap["recvers"] != nil {
-					r := hsMap["recvers"].([]interface{})
-					for _, v := range r {
-						recvers = append(recvers, v.(string))
-					}
-
-					hs4 := map[string]string{"rsp": "hs4", "result": "OK"}
-					enc := json.NewEncoder(conn)
-					enc.Encode(hs4)
-				}
-				break
-			}
-		} else {
+		if err != nil {
 			return
+		}
+
+		if hsMap["req"] == "hs1" {
+			if hsMap["chid"] == nil {
+				continue
+			}
+
+			if len(hsMap["chid"].(string)) > 0 {
+				chid = hsMap["chid"].(string)
+			} else {
+				// chid =uuid // TODO
+			}
+
+			hs2 := map[string]string{"rsp": "hs2", "chid": chid}
+			enc := json.NewEncoder(conn)
+			enc.Encode(hs2)
+
+		} else if hsMap["req"] == "hs3" {
+			if hsMap["recvers"] == nil {
+				continue
+			}
+
+			r := hsMap["recvers"].([]interface{})
+			for _, v := range r {
+				recvers = append(recvers, v.(string))
+			}
+
+			hs4 := map[string]string{"rsp": "hs4", "result": "OK"}
+			enc := json.NewEncoder(conn)
+			enc.Encode(hs4)
+			break
 		}
 	}
 	if err = scanner.Err(); err != nil {

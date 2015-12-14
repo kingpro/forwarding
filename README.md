@@ -10,6 +10,8 @@ A very liteweight tool to forward data over tcp,  written in Go.
 1 握手报文加密
 2 超时关闭
 3 自动生成chid
+4 chan完善
+5 控制指令完成
 ```
 
 
@@ -104,5 +106,5 @@ client send data to forwarding-server who will foward the data to all receivers 
 
 
 # Step 6
-A close the connection, then forwarding-server clear this session infomations.
+client close the connection, then forwarding-server clear this session infomations.
 
