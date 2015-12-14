@@ -19,26 +19,44 @@ client A [TCP stream encrypted by AES256]----> forwarding-server ----> [TCP stre
 # Step 1 
 A send a json
 
+```
 {
     "req":"hs1",  // hs a.k.a handshake
     "chid":"ch0" // optional
 }
+```
 
 
 e.g.
-client A: {"req":"hs1","chid":"ch0"}
-client B: {"req":"hs1","chid":"ch1"}
-{"req":"hs1","chid":"ch2"}
+client A: 
+
+```
+{"req":"hs1","chid":"ch0"}
+```
+
+client B:
+
+```
+ {"req":"hs1","chid":"ch1"}
+
+```
+
 
 # Step 2 
 forwarding-server send back a json to A
+
+```
 {
     "rsp":"hs2",   
     "chid":"ch1"
 }
 
+```
+
 
 # Step 3 
+
+```
 A send a json
 {  
     "req":"hs3",   
@@ -46,19 +64,34 @@ A send a json
     "timeout":3600, // optinal, seconds
 }
 
+```
+
 
 e.g.
 
-client A: {"req":"hs3","recvers":["ch1"]}
-client B: {"req":"hs3","recvers":["ch0"]}
+client A: 
+
+```
+{"req":"hs3","recvers":["ch1"]}
+
+```
+client B:
+
+```
+ {"req":"hs3","recvers":["ch0"]}
+
+```
 
 
 # Step 4
 forwarding-server send back a json to A
+
+```
 {   
     "rsp":"hs4",   
     "result":"OK"
 }
+```
 
 
 # Step 5
