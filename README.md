@@ -5,9 +5,11 @@ A very liteweight tool to forward data over tcp,  written in Go.
 
 
 #TODO:
+```
 1 握手报文加密
 2 超时关闭
 3 自动生成chid
+```
 
 
 #Client A want to broadcast data to client B, the process is
@@ -21,7 +23,7 @@ A send a json
 
 ```
 {
-    "req":"hs1",  // hs a.k.a handshake
+    "req":"hs1",  // hs1 a.k.a first step of handshake process
     "chid":"ch0" // optional
 }
 ```
