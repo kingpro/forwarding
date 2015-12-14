@@ -1,8 +1,13 @@
 # forwarding
 A very liteweight tool to forward data over tcp,  written in Go.
 
-这有点像一个turn服务，可以转发任意两端(多端)之间的tcp层报文，所以这必然是一个神器。具体能干嘛? 你懂的，嘿嘿~
+这有点像一个turn服务, 多个客户端连接到这个服务上，它负责转发任意两端(多端)之间的tcp层报文, 所以这必然是一个神器。具体能干嘛? 你懂的，嘿嘿~
 
+
+#TODO:
+1 握手报文加密
+2 超时关闭
+3 自动生成chid
 
 
 #Client A want to broadcast data to client B, the process is
@@ -15,37 +20,44 @@ client A [TCP stream encrypted by AES256]----> forwarding-server ----> [TCP stre
 A send a json
 
 {
-    "sync_id":id0
-    "req":"handshake_0"
-    "channel_id":"ch0" // optional
+    "req":"hs1",  // hs a.k.a handshake
+    "chid":"ch0" // optional
 }
 
+
+e.g.
+client A: {"req":"hs1","chid":"ch0"}
+client B: {"req":"hs1","chid":"ch1"}
+{"req":"hs1","chid":"ch2"}
 
 # Step 2 
 forwarding-server send back a json to A
 {
-    "sync_id":id1,
-    "channel_id":"ch1"
-    "rsp":"handshake_1"
+    "rsp":"hs2",   
+    "chid":"ch1"
 }
 
 
 # Step 3 
 A send a json
-{
-    "sync_id":id2
-    "req":"handshake_2"
-    "recv_channel_ids":["ch2","ch3","ch4"],
-    "max_timeout_sec":3600, // optinal
+{  
+    "req":"hs3",   
+    "recvers":["ch2","ch3","ch4"],   // optional, not set means broadcast to all others.
+    "timeout":3600, // optinal, seconds
 }
+
+
+e.g.
+
+client A: {"req":"hs3","recvers":["ch1"]}
+client B: {"req":"hs3","recvers":["ch0"]}
 
 
 # Step 4
 forwarding-server send back a json to A
-{
-    "sync_id":id3
-    "req":"handshake_3"
-    "handshake_result":"OK"
+{   
+    "rsp":"hs4",   
+    "result":"OK"
 }
 
 
@@ -55,6 +67,3 @@ A send data to forwarding-server who fowarding the data to B (all recv_channel_i
 
 # Step 6
 A close the connection, then forwarding-server clear this session infomations.
-
-
-
