@@ -2,6 +2,7 @@
 A very liteweight tool to forward data over tcp,  written in Go.
 
 这有点像一个turn服务, 多个客户端连接到这个服务上，它负责转发任意两端(多端)之间的tcp层报文, 所以这必然是一个神器。具体能干嘛? 你懂的，嘿嘿~
+本项目目前基本可用，但仍需测试。
 
 
 #TODO:
