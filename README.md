@@ -19,24 +19,24 @@ client A [TCP stream encrypted by AES256]----> forwarding-server ----> [TCP stre
 
 
 # Step 1 
-A send a json
+client send the following json to forwarding-server: 
 
 ```
 {
     "req":"hs1",  // hs1 a.k.a first step of handshake process
-    "chid":"ch0" // optional
+    "chid":"ch0" // optional. Sever will generate if not set.
 }
 ```
 
 
 e.g.
-client A: 
+client A send the following json to forwarding-server: 
 
 ```
 {"req":"hs1","chid":"ch0"}
 ```
 
-client B:
+client B send the following json to forwarding-server:
 
 ```
  {"req":"hs1","chid":"ch1"}
@@ -45,21 +45,22 @@ client B:
 
 
 # Step 2 
-forwarding-server send back a json to A
+forwarding-server send back the following json to the client
 
 ```
 {
     "rsp":"hs2",   
-    "chid":"ch1"
+    "chid":"ch1" 
 }
 
 ```
 
 
 # Step 3 
+client send the following json to forwarding-server: 
 
 ```
-A send a json
+client send a json
 {  
     "req":"hs3",   
     "recvers":["ch2","ch3","ch4"],   // optional, not set means broadcast to all others.
@@ -86,19 +87,21 @@ client B:
 
 
 # Step 4
-forwarding-server send back a json to A
+forwarding-server send back the following json to the client
 
 ```
 {   
     "rsp":"hs4",   
-    "result":"OK"
+    "result":"OK" // "OK" means initial sucessfully, "FAIL" means initial failed.
+    "desc":"" // optional.
 }
 ```
 
 
 # Step 5
-A send data to forwarding-server who fowarding the data to B (all recv_channel_ids receivers) directly.
+client send data to forwarding-server who will foward the data to all receivers directly.
 
 
 # Step 6
 A close the connection, then forwarding-server clear this session infomations.
+
