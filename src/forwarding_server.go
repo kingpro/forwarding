@@ -103,6 +103,7 @@ func Accepter(listenAddr string, hsPwd string) {
 		conn, err := listener.Accept()
 		if err != nil {
 			log.Println(err)
+			continue
 		}
 		go Handler(conn, hsPwd)
 	}
