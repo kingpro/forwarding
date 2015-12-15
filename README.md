@@ -12,7 +12,7 @@ A very liteweight tool to forward data over tcp,  written in Go.
 
 
 
-#TODO:
+##TODO:
 ```
 1 握手报文加密
 2 超时关闭
@@ -23,17 +23,17 @@ A very liteweight tool to forward data over tcp,  written in Go.
 ```
 
 
-#Client A want to send data to client B, the process is
+##Client A want to send data to client B, the process is
 ```
 client A [TCP stream encrypted by AES256]----> forwarding-server ----> [TCP stream encrypted by AES256] client B
 ```
 
 
 
-## The concrete steps are:
+#The concrete steps are:
 
 
-# Step 1 , this is first step of handshake process
+##Step 1 , this is first step of handshake process
 client send the following json to forwarding-server: 
 
 ```
@@ -59,7 +59,7 @@ client B send the following json to forwarding-server:
 ```
 
 
-# Step 2  , this is second step of handshake process
+##Step 2  , this is second step of handshake process
 forwarding-server send back the following json to the client
 
 ```
@@ -71,7 +71,7 @@ forwarding-server send back the following json to the client
 ```
 
 
-# Step 3  , this is third step of handshake process
+##Step 3  , this is third step of handshake process
 client send the following json to forwarding-server: 
 
 ```
@@ -101,7 +101,7 @@ client B:
 ```
 
 
-# Step 4 , this is forth step of handshake process
+##Step 4 , this is forth step of handshake process
 forwarding-server send back the following json to the client
 
 ```
@@ -113,10 +113,10 @@ forwarding-server send back the following json to the client
 ```
 
 
-# Step 5 , send data after handshake sucessfully
+##Step 5 , send data after handshake sucessfully
 client send data to forwarding-server who will foward the data to all receivers directly.
 
 
-# Step 6 , close session when everthing is done
+##Step 6 , close session when everthing is done
 client close the connection, then forwarding-server clear this session infomations.
 
