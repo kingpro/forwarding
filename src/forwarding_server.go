@@ -49,6 +49,7 @@ func main() {
 	}
 }
 
+// 管理所有客户端连接信息； 发送数据
 func Dispatcher() {
 	connMap := make(map[string]*ConnInfo)
 	for {
@@ -88,26 +89,27 @@ func Dispatcher() {
 	}
 }
 
-// 创建连接，通知 Dispatcher 新增连接信息, 并创建 Handler
+// 创建连接; 创建 Handler
 func Accepter(listenAddr string, hsPwd string) {
 
 	listener, err := net.Listen("tcp", listenAddr)
 	if err != nil {
 		log.Fatal(err)
+		cmdQ <- "quit"
+		return
 	}
 
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
 			log.Println(err)
-			cmdQ <- "quit"
-			break
 		}
 		go Handler(conn, hsPwd)
 	}
 
 }
 
+// 连接建立之后的握手过程
 func HandShake(conn net.Conn, hsPwd string) (chid string, recvers []string, err error) {
 	err = nil
 	scanner := bufio.NewScanner(conn)
@@ -157,6 +159,7 @@ func HandShake(conn net.Conn, hsPwd string) (chid string, recvers []string, err 
 	return
 }
 
+// 客户端连接的处理逻辑。 首先握手，握手失败关闭连接；然后读数据，写入 Dispatcher 的处理队列。
 func Handler(conn net.Conn, hsPwd string) {
 	defer conn.Close()
 
