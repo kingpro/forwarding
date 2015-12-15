@@ -12,6 +12,7 @@ A very liteweight tool to forward data over tcp,  written in Go.
 
 
 
+
 ##TODO:
 ```
 1 握手报文加密
@@ -119,4 +120,11 @@ client send data to forwarding-server who will foward the data to all receivers 
 
 ##Step 6 , close session when everthing is done
 client close the connection, then forwarding-server clear this session infomations.
+
+
+
+# author
+author: jeffery
+email: dungeonsnd at gmail dot com
+
 
