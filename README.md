@@ -29,7 +29,8 @@ client A [TCP stream encrypted by AES256]----> forwarding-server ----> [TCP stre
 ```
 
 
-The concrete steps of all the steps is:
+
+#The concrete steps of all the steps is:
 
 
 # Step 1 , this is first step of handshake process
